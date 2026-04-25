@@ -20,10 +20,11 @@ dev = [
 
 [project.scripts]
 server = "server.app:main"
+inference = "inference.runner:main"
 
 [tool.setuptools]
 include-package-data = true
-py-modules = ["models", "client", "inference", "evaluate_tasks"]
+py-modules = ["models", "client", "evaluate_tasks", "app"]
 
 [tool.setuptools.packages.find]
-include = ["server*", "training*", "evaluation*"]
+include = ["server*", "training*", "evaluation*", "inference*"]
