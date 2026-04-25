@@ -49,6 +49,12 @@ def print_score_chart(
     print()
 
 
+def _fmt_cell(val: Any, width: int) -> str:
+    """Format a single table cell, using 4dp for floats."""
+    text = f"{val:.4f}" if isinstance(val, float) else str(val)
+    return f"{text:<{width}}"
+
+
 def print_metric_table(rows: list[dict[str, Any]]) -> None:
     """Print a plain-text table of all metrics for each task.
 
@@ -59,19 +65,19 @@ def print_metric_table(rows: list[dict[str, Any]]) -> None:
 
     headers = list(rows[0].keys())
     col_widths = {
-        h: max(len(h), *(len(f"{r.get(h, ''):.4f}" if isinstance(r.get(h), float) else str(r.get(h, ""))) for r in rows))
+        h: max(
+            len(h),
+            *(len(_fmt_cell(r.get(h, ""), 0)) for r in rows),
+        )
         for h in headers
     }
-
-    def _fmt(val: Any) -> str:
-        return f"{val:.4f}" if isinstance(val, float) else str(val)
 
     separator = "-+-".join("-" * col_widths[h] for h in headers)
     header_line = " | ".join(f"{h:<{col_widths[h]}}" for h in headers)
     print(header_line)
     print(separator)
     for row in rows:
-        line = " | ".join(f"{_fmt(row.get(h, '')):<{col_widths[h]}}" for h in headers)
+        line = " | ".join(_fmt_cell(row.get(h, ""), col_widths[h]) for h in headers)
         print(line)
     print()
 
